@@ -1,0 +1,24 @@
+#! /usr/bin/env bash
+
+config="$1"
+device="$2"
+
+function usage ()
+{
+	echo "Usage: deploy path/to/config.cfg ip.of.target.device" 
+	echo "Copy and start the update process on the airos device"
+}
+
+function dothemagic ()
+{
+	ssh-keygen -f "~/.ssh/known_hosts" -R $device
+
+	scp -o UserKnownHostsFile="/dev/null" $config "ubnt@$device:/tmp/system.cfg"
+	ssh -o UserKnownHostsFile="/dev/null" "ubnt@$device" 'cfgmtd -w /tmp/system.cfg; /usr/etc/rc.d/rc.do.softrestart save'
+}
+
+if [ -z $config ]; then
+	usage
+else
+	dothemagic
+fi

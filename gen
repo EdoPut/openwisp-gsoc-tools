@@ -1,0 +1,22 @@
+#! /usr/bin/env bash
+set -e -o pipefail
+
+input="$1"
+
+function usage ()
+{
+	echo "Usage: gen path/to/config.json" 
+	echo "Generate the airos configuration for config.json merged with conf/nobrick.json"
+	echo "Output both to stdout and /path/to/config.ini"
+}
+
+function dothemagic ()
+{
+	netjsonconfig -c $input -t conf/nobrick.json -b airos -m render --verbose | tee "$(dirname $input)/$(basename $input .json).ini"
+}
+
+if [ -z $config ]; then
+	usage
+else
+	dothemagic
+fi

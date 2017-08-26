@@ -1,0 +1,15 @@
+#! /usr/bin/env bash
+input="$1"
+
+function usage ()
+{
+	echo "Usage: json path/to/config.json"
+	echo "Pretty print the config.json merged with conf/nobrick.json"
+}
+netjsonconfig -c $input -t conf/nobrick.json -b airos -m json | json_pp
+
+if [ -z $input ] ;then
+	dothemagic
+else
+	usage
+fi
